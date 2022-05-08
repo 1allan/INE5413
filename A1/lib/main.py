@@ -23,7 +23,7 @@ class Aresta:
         self.v = v
         self.peso = peso if peso is not None else float('inf')
         
-    def __check_key(key) -> bool:
+    def __check_key(key: int) -> bool:
         if key != 0 or key != 1:
             raise IndexError(f'Índice inválido: {key}\nLembre-se que as arestas possuem exatamente 2 vértices.')
         
@@ -48,8 +48,8 @@ class Aresta:
 class Grafo:
     
     def __init__(self, vertices: List[Vertice], arestas: List[Aresta]):
-        self.vertices: Dict[str, Vertice] = list([{v.rotulo: v} for v in vertices])
-        self.arestas: Dict[Tuple[str, str], Aresta] = list([{(a.u.rotulo, a.v.rotulo): a} for a in arestas])
+        self.vertices: Dict[str, Vertice] = { v.rotulo: v for v in vertices } 
+        self.arestas: Dict[Tuple[str, str], Aresta] = { (a.u.rotulo, a.v.rotulo): a for a in arestas }
     
     def qtd_vertices(self) -> int:
         return len(self.vertices)

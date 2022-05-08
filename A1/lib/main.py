@@ -5,6 +5,7 @@
 # direto.
 # ---------------------------------------------------------------------------- #
 from typing import List, Dict, Tuple
+from __future__ import annotations
 
 
 class Vertice:
@@ -12,7 +13,7 @@ class Vertice:
     def __init__(self, rotulo: str):
         self.rotulo = rotulo
         
-    def __eq__(self, outro: object) -> bool:
+    def __eq__(self, outro: Vertice) -> bool:
         return self.rotulo == outro.rotulo
         
 
@@ -60,7 +61,7 @@ class Grafo:
     def grau(self, v: Vertice) -> int:
         count = 0
         for aresta in self.arestas:
-            if v in aresta.get_pair():
+            if v in aresta.get_par():
                 count += 1
         return count
         
@@ -99,3 +100,24 @@ class Grafo:
             aresta = self.arestas.get((v.rotulo, u.rotulo))
         return aresta is not None
         
+    def ler(arquivo: str) -> Grafo:
+        with open(arquivo) as file:
+            vertices = []
+            arestas = []
+            it_is_vertice_time_baby = True
+            for linha in file.readlines()[1:]:
+                if linha.startswith('*edges'):
+                    it_is_vertice_time_baby = False
+                    continue
+                
+                if it_is_vertice_time_baby:
+                    _, rotulo = linha.split(' ', 1)
+                    vertices.append(Vertice(rotulo)) 
+                else:
+                    u_index, v_index, peso = linha.split(' ', 2)
+                    u = vertices[int(u_index) - 1]
+                    v = vertices[int(v_index) - 1]
+                    arestas.append(Aresta(u, v, float(peso)))
+                    
+            return Grafo(vertices, arestas)
+            

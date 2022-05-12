@@ -4,8 +4,8 @@
 # faz, já que a outra alternativa seria comparar as referências dos objetos
 # direto.
 # ---------------------------------------------------------------------------- #
-from typing import List, Dict, Tuple
 from __future__ import annotations
+from typing import List, Dict, Tuple
 
 
 class Vertice:
@@ -112,6 +112,7 @@ class Grafo:
                 
                 if it_is_vertice_time_baby:
                     _, rotulo = linha.split(' ', 1)
+                    rotulo = rotulo[:-1]
                     vertices.append(Vertice(rotulo)) 
                 else:
                     u_index, v_index, peso = linha.split(' ', 2)
@@ -121,3 +122,14 @@ class Grafo:
                     
             return Grafo(vertices, arestas)
             
+    def __str__(self):
+        output = ''
+        for vertice in self.vertices.values():
+            output += f'V: {vertice.rotulo}\n'
+            
+        for aresta in self.arestas.values():
+            output += f'E: ({aresta.u.rotulo}, {aresta.v.rotulo}, {aresta.peso})\n'
+        
+            
+        return output
+        

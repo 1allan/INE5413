@@ -60,7 +60,7 @@ class Grafo:
         
     def grau(self, v: Vertice) -> int:
         count = 0
-        for aresta in self.arestas:
+        for aresta in self.arestas.values():
             if v in aresta.get_par():
                 count += 1
         return count
@@ -89,9 +89,9 @@ class Grafo:
         vizinhos = []
         for aresta in self.arestas.values():
             if v == aresta.u:
-                vizinhos.push(aresta.v)
+                vizinhos.append(aresta.v)
             elif v == aresta.v:
-                vizinhos.push(aresta.u)
+                vizinhos.append(aresta.u)
         return vizinhos
     
     def ha_aresta(self, u: Vertice, v: Vertice) -> bool:

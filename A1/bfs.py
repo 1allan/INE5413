@@ -4,24 +4,20 @@ from time import time
 from lib import Vertice, Grafo
 
 
-class VerticeInfo(TypedDict):
-    visitado: bool
-    distancia: int
-    antecessor: Vertice
+class VerticeInfo:
     
+    def __init__(self, ref: Vertice|None = None):
+        self.ref = ref
+        self.visitado: bool = False
+        self.distancia: int = 0
+        self.antecessor: Vertice|None = None
 
-def set_vertice_info(v: Vertice) -> VerticeInfo:
-    return {
-        'visitado': False,
-        'distancia': 0,
-        'antecessor': None
-    }
     
 def print_fila(nivel: int, fila: List[Vertice]):
     print(f'{nivel}:', ','.join([v.rotulo for v in fila]))
 
 def bfs(g: Grafo, s: Vertice):
-    vertices_infos = { v.rotulo: set_vertice_info(v) for v in g.get_vertices() }
+    vertices_infos = { v.rotulo: VerticeInfo() for v in g.get_vertices() }
     fila: List[VerticeInfo] = list()
     fila.append(s)
     
@@ -31,10 +27,10 @@ def bfs(g: Grafo, s: Vertice):
         u = fila.pop(0)
         for v in g.vizinhos(u):
             v_info: VerticeInfo = vertices_infos.get(v.rotulo)
-            if (not v_info['visitado']):
-                v_info['visitado'] = True
-                v_info['distancia'] += 1
-                v_info['antecessor'] = u
+            if (not v_info.visitado):
+                v_info.visitado = True
+                v_info.distancia += 1
+                v_info.antecessor = u
                 fila.append(v)
         nivel += 1
 

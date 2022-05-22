@@ -1,43 +1,40 @@
-from typing import List
+from typing import List, TypedDict
 from time import time
 
 from lib import Vertice, Grafo
 
 
-class VerticeInfo(Vertice):
+class VerticeInfo(TypedDict):
+    visitado: bool
+    distancia: int
+    antecessor: Vertice
     
-    def __init__(self, v: Vertice):
-        self.ref = v
-        self.visitado = False
-        self.distancia = 0
-        self.antecessor: Vertice|None = None
-        super().__init__(v.rotulo)
-        
-    def __str__(self) -> str:
-        output = (
-            f'Vértice: {self.ref.rotulo}',
-            f'Visitado: {self.visitado}',
-            f'Distância: {self.distancia}',
-            f'Antecessor: {self.antecessor}'
-        )
-        return '\n'.join(output)
-        
+
+def set_vertice_info(v: Vertice) -> VerticeInfo:
+    return {
+        'visitado': False,
+        'distancia': 0,
+        'antecessor': None
+    }
+    
+def print_fila(nivel: int, fila: List[Vertice]):
+    print(f'{nivel}:', ','.join([v.rotulo for v in fila]))
 
 def bfs(g: Grafo, s: Vertice):
-    vertices_infos = list([VerticeInfo(v) for v in g.get_vertices()])
+    vertices_infos = { v.rotulo: set_vertice_info(v) for v in g.get_vertices() }
     fila: List[VerticeInfo] = list()
     fila.append(s)
     
     nivel = 0
     while len(fila) > 0:
-        print(f'{nivel}:', ','.join([v.rotulo for v in fila]))
+        print_fila(nivel, fila)
         u = fila.pop(0)
         for v in g.vizinhos(u):
-            v_info = vertices_infos[vertices_infos.index(v)]
-            if (not v_info.visitado):
-                v_info.visitado = True
-                v_info.distancia += 1
-                v_info.antecessor = u
+            v_info: VerticeInfo = vertices_infos.get(v.rotulo)
+            if (not v_info['visitado']):
+                v_info['visitado'] = True
+                v_info['distancia'] += 1
+                v_info['antecessor'] = u
                 fila.append(v)
         nivel += 1
 

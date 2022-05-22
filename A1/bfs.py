@@ -30,6 +30,7 @@ def bfs(g: Grafo, s: Vertice):
     
     level = 0
     while len(queue) > 0:
+        print(f'{level}:', ','.join([v.rotulo for v in queue]))
         u = queue.pop(0)
         for v in g.vizinhos(u):
             v_info = vertices_infos[vertices_infos.index(v)]
@@ -38,8 +39,6 @@ def bfs(g: Grafo, s: Vertice):
                 v_info.distance += 1
                 v_info.parent = u
                 queue.append(v)
-                
-        print(f'{level}:', ','.join([v.rotulo for v in queue]))
         level += 1
 
 

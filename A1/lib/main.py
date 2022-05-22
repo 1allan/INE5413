@@ -100,6 +100,12 @@ class Grafo:
             aresta = self.arestas.get((v.rotulo, u.rotulo))
         return aresta is not None
         
+    def get_vertices(self) -> List[Vertice]:
+        return list(self.vertices.values())
+    
+    def get_arestas(self) -> List[Aresta]:
+        return list(self.arestas.values())
+        
     def ler(arquivo: str) -> Grafo:
         with open(arquivo) as file:
             vertices = []

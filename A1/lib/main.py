@@ -88,9 +88,9 @@ class Grafo:
         # espacial tho...
         vizinhos = []
         for aresta in self.arestas.values():
-            if v == aresta.u:
+            if v is aresta.u:
                 vizinhos.append(aresta.v)
-            elif v == aresta.v:
+            elif v is aresta.v:
                 vizinhos.append(aresta.u)
         return vizinhos
     

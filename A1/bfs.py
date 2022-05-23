@@ -1,5 +1,4 @@
-from typing import List, TypedDict
-from time import time
+from typing import List
 
 from lib import Vertice, Grafo
 
@@ -38,7 +37,4 @@ def bfs(g: Grafo, s: Vertice):
 if __name__ == '__main__':
     g = Grafo.ler('./tests/polbooks.net')
 
-    inicio = time()
     bfs(g, g.get_vertices()[0])
-
-    print(f'Duração: {round(time() - inicio, 3)}s')

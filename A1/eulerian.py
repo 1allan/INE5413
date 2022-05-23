@@ -1,4 +1,3 @@
-from time import time
 from typing import Dict, List, Tuple
 
 from lib import Vertice, Aresta, Grafo
@@ -56,11 +55,11 @@ def hierholzer(g: Grafo) -> Tuple[bool, List[Vertice] | None]:
 
 if __name__ == '__main__':
     com_ciclo = Grafo.ler('./tests/ContemCicloEuleriano.net')
-    inicio = time()
-    print('Com ciclo euleriano:', hierholzer(com_ciclo))
-    print(f'Duração: {round(time() - inicio, 3)}s')
+    tem, ciclo = hierholzer(com_ciclo)
+    print(1 if tem else 0)
+    print(','.join(list([c.rotulo for c in ciclo])))
     
     sem_ciclo = Grafo.ler('./tests/SemCicloEuleriano.net')
-    inicio = time()
-    print('Sem ciclo euleriano:', hierholzer(sem_ciclo))
-    print(f'Duração: {round(time() - inicio, 3)}s')
+    tem, ciclo = hierholzer(sem_ciclo)
+    print(1 if tem else 0)
+    print(','.join(list([c.rotulo for c in ciclo])))

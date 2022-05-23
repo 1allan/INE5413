@@ -113,7 +113,7 @@ class Grafo:
         return list(self.arestas.values())
         
     def ler(arquivo: str) -> Grafo:
-        with open(arquivo) as file:
+        with open(arquivo, 'r', encoding='utf8') as file:
             vertices = []
             arestas = []
             it_is_vertice_time_baby = True

@@ -14,33 +14,29 @@ def buscaSubcicloEuleriano(g: Grafo, v: Vertice, c: Dict[Aresta, ArestaInfo]) ->
     ciclo = [v]
     temp = v
     while v is temp:
-        visitadas: List[bool] = []
+        tinha_nao_visitada = False
         for u in g.vizinhos(v):
-            aresta = g.get_aresta(v, u)
-            if aresta is not None:
-                visitadas.append(c[aresta].visitada)
-
-        if all(visitadas):
-            return (False, None)
-        
-        for u in g.get_arestas():
-            if not c[u].visitada:
-                c[u].visitada = True
+            aresta = g.get_aresta(u, v)
+            if aresta is not None and not c[aresta].visitada:
+                c[aresta].visitada = True
                 v = u
                 ciclo.append(v)
-                break
+                tinha_nao_visitada = True
         
-        for x in ciclo:
-            for w in g.vizinhos(x):
-                aresta = g.get_aresta(x, w)
-                visitada = c[aresta].visitada
-                if not visitada:
-                    tem_subciclo, sub_ciclo = buscaSubcicloEuleriano(g, x, c)
-                    if not tem_subciclo:
-                        return False, None
-                    return True, sub_ciclo
+        if not tinha_nao_visitada:
+            return False, None
         
-        return True, ciclo
+    for x in ciclo:
+        for w in g.vizinhos(x):
+            aresta = g.get_aresta(x, w)
+            visitada = c[aresta].visitada
+            if not visitada:
+                tem_subciclo, sub_ciclo = buscaSubcicloEuleriano(g, x, c)
+                if not tem_subciclo:
+                    return False, None
+                return True, sub_ciclo
+    
+    return True, ciclo
         
 
 def hierholzer(g: Grafo) -> Tuple[bool, List[Vertice] | None]:

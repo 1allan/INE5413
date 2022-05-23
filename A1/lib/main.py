@@ -100,6 +100,12 @@ class Grafo:
             aresta = self.arestas.get((v.rotulo, u.rotulo))
         return aresta is not None
         
+    def get_aresta(self, u: Vertice, v: Vertice) -> Aresta | None:
+        aresta = self.arestas.get((u.rotulo, v.rotulo))
+        if aresta is None:
+            aresta = self.arestas.get((v.rotulo, u.rotulo))
+        return aresta
+    
     def get_vertices(self) -> List[Vertice]:
         return list(self.vertices.values())
     

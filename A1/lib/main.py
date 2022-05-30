@@ -1,9 +1,3 @@
-# ---------------------------------------------------------------------------- #
-# TODO: ver se é válido substituir as listas por Set.
-# TODO: ver se faz sentido comparar os vértices pelos rótulos. Na minha cabeça,
-# faz, já que a outra alternativa seria comparar as referências dos objetos
-# direto.
-# ---------------------------------------------------------------------------- #
 from __future__ import annotations
 from typing import List, Dict, Tuple
 
@@ -82,10 +76,6 @@ class Grafo:
             return vertice.rotulo
         
     def vizinhos(self, v: Vertice) -> List[Vertice]:
-        # TODO: Talvez o registro dos vizinhos de um vértice devam ser mantidos
-        # no próprio vértice também, isso reduziria a complexidade temporal
-        # desse método de O(n) para O(1). Talvez aumentaria a complexidade
-        # espacial tho...
         vizinhos = []
         for aresta in self.arestas.values():
             if v is aresta.u:

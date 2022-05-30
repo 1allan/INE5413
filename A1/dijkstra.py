@@ -7,7 +7,7 @@ class VerticeInfo:
     def __init__(self, ref: Vertice | None = None):
         self.ref = ref
         self.custo = float('inf')
-        self.antecessor = None
+        self.antecessor: Vertice = None
 
 
 def dijkstra(g: Grafo, s: Vertice):
@@ -23,14 +23,15 @@ def dijkstra(g: Grafo, s: Vertice):
     for aresta in g.get_arestas():
         if vertice_infos[aresta.v.rotulo].custo > vertice_infos[aresta.u.rotulo].custo + aresta.peso:
             return False, None, None
-    
-    custos: List[float] = []
-    antecessores: List[Vertice] = []
-    for vi in vertice_infos.values():
-        custos.append(vi.custo)
-        antecessores.append(vi.antecessor)
-    return True, custos, antecessores
-    
+            
+    for rotulo, vertice_info in vertice_infos.items():
+        line = f'{rotulo}: '
+        t = vertice_info
+        while t.antecessor is not None:
+            line += t.antecessor.rotulo + ','
+            t = vertice_infos.get(t.antecessor.rotulo)
+        line += rotulo
+        print(line + f'; d={vertice_info.custo}')
 
 if __name__ == '__main__':
     g = Grafo.ler('./tests/fln_pequena.net')

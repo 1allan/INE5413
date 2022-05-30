@@ -30,10 +30,11 @@ def buscaSubcicloEuleriano(g: Grafo, v: Vertice, c: Dict[Aresta, ArestaInfo]) ->
             aresta = g.get_aresta(x, w)
             visitada = c[aresta].visitada
             if not visitada:
-                tem_subciclo, sub_ciclo = buscaSubcicloEuleriano(g, x, c)
+                tem_subciclo, subciclo = buscaSubcicloEuleriano(g, x, c)
                 if not tem_subciclo:
                     return False, None
-                return True, sub_ciclo
+                
+                ciclo = ciclo[:ciclo.index(x)] + subciclo + ciclo[ciclo.index(x) + 1:]
     
     return True, ciclo
         
@@ -57,9 +58,9 @@ if __name__ == '__main__':
     com_ciclo = Grafo.ler('./tests/ContemCicloEuleriano.net')
     tem, ciclo = hierholzer(com_ciclo)
     print(1 if tem else 0)
-    print(','.join(list([c.rotulo for c in ciclo])))
+    print(','.join(list([c.rotulo for c in ciclo[:-1]])))
     
     sem_ciclo = Grafo.ler('./tests/SemCicloEuleriano.net')
     tem, ciclo = hierholzer(sem_ciclo)
     print(1 if tem else 0)
-    print(','.join(list([c.rotulo for c in ciclo])))
+    print(','.join(list([c.rotulo for c in ciclo[:-1]])))

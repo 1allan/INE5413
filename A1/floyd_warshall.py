@@ -12,14 +12,14 @@ def gera_matriz(g: Grafo) -> MatrizAdjacencia:
             if vertices[i] is vertices[j]:
                 output[i].append(0)
             else:
-                aresta= g.get_aresta(vertices[i], vertices[j])
+                aresta = g.get_aresta(vertices[i], vertices[j])
                 if aresta is not None:
                     output[i].append(aresta.peso)
                 else:
                     output[i].append(float('inf'))
     return output
 
-def floyd_marshall(g: Grafo):
+def floyd_warshall(g: Grafo):
     matrizes = [gera_matriz(g)]
     
     for k in range(1, len(g.get_vertices())):
@@ -37,4 +37,4 @@ def pprint(matrizes: List[MatrizAdjacencia]):
 if __name__ == '__main__':
     g = Grafo.ler('./tests/fln_pequena.net')
 
-    pprint(floyd_marshall(g))
+    pprint(floyd_warshall(g))

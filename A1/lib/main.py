@@ -81,7 +81,7 @@ class Grafo:
         if vertice is not None:
             return vertice.rotulo
         
-    def vizinhos(self, v: Vertice) -> List(Vertice):
+    def vizinhos(self, v: Vertice) -> List[Vertice]:
         # TODO: Talvez o registro dos vizinhos de um vértice devam ser mantidos
         # no próprio vértice também, isso reduziria a complexidade temporal
         # desse método de O(n) para O(1). Talvez aumentaria a complexidade

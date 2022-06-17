@@ -41,6 +41,8 @@ def dfs_visit(g: Grafo, v: Vertice, infos: Dict[str, VerticeInfo], tempo: Tempo)
         if not infos[u.rotulo].visitado:
             infos[u.rotulo].antecessor = v
             dfs_visit(g, u, infos, tempo)
+    tempo[0] += 1
+    infos[v.rotulo].fim = tempo[0]
 
 def transpor(g: Grafo) -> Grafo:
     vertices = list([ Vertice(v.rotulo) for v in g.get_vertices()])

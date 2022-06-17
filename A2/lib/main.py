@@ -109,8 +109,11 @@ class Grafo:
             vertices = []
             arestas = []
             it_is_vertice_time_baby = True
+            dirigido = False  # god forgive me
             for linha in file.readlines()[1:]:
                 if linha.startswith('*edges') or linha.startswith('*arcs'):
+                    if linha.startswith('*arcs'):
+                        dirigido = True
                     it_is_vertice_time_baby = False
                     continue
                 
@@ -124,7 +127,7 @@ class Grafo:
                     v = vertices[int(v_index) - 1]
                     arestas.append(Aresta(u, v, float(peso)))
                     
-            return Grafo(vertices, arestas)
+            return Grafo(vertices, arestas, dirigido=dirigido)
             
     def __str__(self):
         output = ''

@@ -42,9 +42,10 @@ class Aresta:
 
 class Grafo:
     
-    def __init__(self, vertices: List[Vertice], arestas: List[Aresta]):
+    def __init__(self, vertices: List[Vertice], arestas: List[Aresta], dirigido: bool=False):
         self.vertices: Dict[str, Vertice] = { v.rotulo: v for v in vertices } 
         self.arestas: Dict[Tuple[str, str], Aresta] = { (a.u.rotulo, a.v.rotulo): a for a in arestas }
+        self.dirigido = dirigido
     
     def qtd_vertices(self) -> int:
         return len(self.vertices)
@@ -63,10 +64,11 @@ class Grafo:
         aresta = self.arestas.get((u.rotulo, v.rotulo))
         if aresta is not None:
             return aresta.peso
-            
-        aresta = self.arestas.get((v.rotulo, u.rotulo))
-        if aresta is not None:
-            return aresta.peso
+        
+        if not self.dirigido:
+            aresta = self.arestas.get((v.rotulo, u.rotulo))
+            if aresta is not None:
+                return aresta.peso
             
         raise Exception(f'A aresta {{{u}, {v}}} não existe.')
         
@@ -80,19 +82,19 @@ class Grafo:
         for aresta in self.arestas.values():
             if v is aresta.u:
                 vizinhos.append(aresta.v)
-            elif v is aresta.v:
+            elif not self.dirigido and v is aresta.v:
                 vizinhos.append(aresta.u)
         return vizinhos
     
     def ha_aresta(self, u: Vertice, v: Vertice) -> bool:
         aresta = self.arestas.get((u.rotulo, v.rotulo))
-        if aresta is None:
+        if not self.dirigido and aresta is None:
             aresta = self.arestas.get((v.rotulo, u.rotulo))
         return aresta is not None
         
     def get_aresta(self, u: Vertice, v: Vertice) -> Aresta | None:
         aresta = self.arestas.get((u.rotulo, v.rotulo))
-        if aresta is None:
+        if not self.dirigido and aresta is None:
             aresta = self.arestas.get((v.rotulo, u.rotulo))
         return aresta
     
@@ -108,7 +110,7 @@ class Grafo:
             arestas = []
             it_is_vertice_time_baby = True
             for linha in file.readlines()[1:]:
-                if linha.startswith('*edges'):
+                if linha.startswith('*edges') or linha.startswith('*arcs'):
                     it_is_vertice_time_baby = False
                     continue
                 

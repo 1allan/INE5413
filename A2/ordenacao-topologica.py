@@ -3,7 +3,7 @@ from lib import Grafo, Vertice, Aresta
 
 Tempo = List[int]
 
-listaOrdTopologica = [] # lista para o retorno da Ord Topologica
+lista_ord_topologica = []  # lista para o retorno da Ord Topologica
 
 class VerticeInfo:
     
@@ -38,11 +38,11 @@ def dfs_visit(g: Grafo, v: Vertice, infos: Dict[str, VerticeInfo], tempo: Tempo)
     tempo[0] += 1
     infos[v.rotulo].fim = tempo[0]
 
-    listaOrdTopologica.insert(0,(v.rotulo+'->'))
+    lista_ord_topologica.insert(0, v.rotulo + '->')
 
 
 
 if __name__ == '__main__':
     g = Grafo.ler('./tests/simpsons_amizades1.net')
     result = ordenacao_topologica(g)
-    print(listaOrdTopologica)
+    print(lista_ord_topologica)

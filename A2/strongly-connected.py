@@ -55,16 +55,17 @@ def transpor(g: Grafo) -> Grafo:
         arestas.append(Aresta(a.v, a.u, a.peso))
     return Grafo(vertices, arestas, dirigido=True)
 
-def pprint(infost: Dict[Vertice, VerticeInfo]):
+def pprint(infost: Dict[str, VerticeInfo]):
     vertices = list([v.ref for v in infost.values()])
     componentes: List[Set] = list({vi.ref.rotulo} for vi in infost.values())
     
     for v in vertices:
-        if infost[v.rotulo].antecessor is None:
+        antecessor = infost[v.rotulo].antecessor
+        if antecessor is None:
             continue
         
         for c in componentes:
-            if infost[v.rotulo].antecessor.rotulo in c:
+            if antecessor.rotulo in c:
                 c.add(v.rotulo)
    
     result: List[Set] = []

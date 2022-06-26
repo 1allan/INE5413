@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 from lib import Grafo, Vertice, Aresta
 
 
@@ -20,7 +20,7 @@ def strongly_connected(g: Grafo) -> List[Vertice | None]:
     
     t_ordenado = sorted([v.ref for v in infos.values()], key=lambda v: infos[v.rotulo].fim, reverse=True)
     infost = dfs(gt, vertices_ordenados=t_ordenado)
-    pprint(infost, g)
+    pprint(infost)
     return list([vi.antecessor for vi in infost.values()])
     
 def dfs(g: Grafo, vertices_ordenados: List[Vertice]=None) -> Dict[Vertice, VerticeInfo]:
@@ -55,21 +55,28 @@ def transpor(g: Grafo) -> Grafo:
         arestas.append(Aresta(a.v, a.u, a.peso))
     return Grafo(vertices, arestas, dirigido=True)
 
-def pprint(infost: Dict[Vertice, VerticeInfo], g: Grafo):
-    componentes: List[List] = []
-    vertices = list([vi.antecessor for vi in infost.values()])
+def pprint(infost: Dict[Vertice, VerticeInfo]):
+    vertices = list([v.ref for v in infost.values()])
+    componentes: List[Set] = list({vi.ref.rotulo} for vi in infost.values())
+    
     for v in vertices:
-        if v is None:
+        if infost[v.rotulo].antecessor is None:
             continue
         
-        componente = [v.rotulo]
-        antecessor = infost.get(v.rotulo).antecessor
-        while antecessor is not None:
-            componente.append(antecessor.rotulo)
-            antecessor = infost.get(antecessor.rotulo).antecessor
-        componentes.append(componente)
-        
-    [print(','.join(c)) for c in componentes]
+        for c in componentes:
+            if infost[v.rotulo].antecessor.rotulo in c:
+                c.add(v.rotulo)
+   
+    result: List[Set] = []
+    for componente in componentes:
+        result.append(componente)
+        for r in result:
+            if len(r.intersection(componente)) > 0:
+                result[result.index(r)] = r.union(componente)
+                if componente in result:
+                    result[result.index(componente)] = r.union(componente)
+                
+    [print(r) for r in {','.join(sorted(c)) for c in result}]
 
 if __name__ == '__main__':
     import os

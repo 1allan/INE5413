@@ -18,10 +18,9 @@ def strongly_connected(g: Grafo) -> List[Vertice | None]:
     infos = dfs(g)
     gt = transpor(g)
     
-    print([t.rotulo + ' ' + str(infos[t.rotulo].fim) for t in [v.ref for v in infos.values()]])
-    t_final_decresc = sorted([v.ref for v in infos.values()], key=lambda v: infos[v.rotulo].fim, reverse=True)
-    print([t.rotulo + ' ' + str(infos[t.rotulo].fim) for t in t_final_decresc])
-    infost = dfs(gt, vertices_ordenados=t_final_decresc)
+    t_ordenado = sorted([v.ref for v in infos.values()], key=lambda v: infos[v.rotulo].fim, reverse=True)
+    infost = dfs(gt, vertices_ordenados=t_ordenado)
+    pprint(infost, g)
     return list([vi.antecessor for vi in infost.values()])
     
 def dfs(g: Grafo, vertices_ordenados: List[Vertice]=None) -> Dict[Vertice, VerticeInfo]:
@@ -56,8 +55,27 @@ def transpor(g: Grafo) -> Grafo:
         arestas.append(Aresta(a.v, a.u, a.peso))
     return Grafo(vertices, arestas, dirigido=True)
 
+def pprint(infost: Dict[Vertice, VerticeInfo], g: Grafo):
+    componentes: List[List] = []
+    vertices = list([vi.antecessor for vi in infost.values()])
+    for v in vertices:
+        if v is None:
+            continue
+        
+        componente = [v.rotulo]
+        antecessor = infost.get(v.rotulo).antecessor
+        while antecessor is not None:
+            componente.append(antecessor.rotulo)
+            antecessor = infost.get(antecessor.rotulo).antecessor
+        componentes.append(componente)
+        
+    [print(','.join(c)) for c in componentes]
 
 if __name__ == '__main__':
-    g = Grafo.ler('./tests/agm_tiny.net')
+    import os
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, './tests/teste_cfc.net')
+    
+    g = Grafo.ler(filename)
     result = strongly_connected(g)
-    print(result)
+    

@@ -38,11 +38,14 @@ def dfs_visit(g: Grafo, v: Vertice, infos: Dict[str, VerticeInfo], tempo: Tempo)
     tempo[0] += 1
     infos[v.rotulo].fim = tempo[0]
 
-    lista_ord_topologica.insert(0, v.rotulo + '->')
+    lista_ord_topologica.insert(0, v.rotulo[1:-1] + ' ->')
 
 
 
 if __name__ == '__main__':
     g = Grafo.ler('./tests/simpsons_amizades1.net')
     result = ordenacao_topologica(g)
-    print(lista_ord_topologica)
+    a = ''
+    for i in lista_ord_topologica:
+        a+=i
+    print(a)

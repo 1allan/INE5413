@@ -65,9 +65,14 @@ def hopcroft_karp(grafo: Grafo) -> Tuple[int, List[Vertice]]:
             if infos[x.rotulo].parceiro is None:
                 if dfs(grafo, x, infos):
                     m += 1
-    
-    parceiros = list([get_rotulo_ou_none(v.parceiro) for v in infos.values()])
-    return (m, parceiros)
+    parceiros = []
+    parceiros_string = ""
+    for k,v in infos.items():
+        parssa = get_rotulo_ou_none(v.parceiro)
+        if k not in parceiros and k != None and parssa != None:    
+            parceiros.append(parssa)
+            parceiros_string += f"{k}-{get_rotulo_ou_none(v.parceiro)} "
+    return (m, parceiros_string)
 
 
 if __name__ == '__main__':

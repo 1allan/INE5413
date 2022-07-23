@@ -1,5 +1,5 @@
-from queue import SimpleQueue
-from .lib import Grafo, Vertice
+from queue import Queue
+from lib import Grafo, Vertice
 
 
 class VerticeInfo:
@@ -10,9 +10,9 @@ class VerticeInfo:
         self.ref: Vertice | None  = ref
 
 
-def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residual: Grafo) -> int | None:
+def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residual: Grafo) -> Queue | None:
     infos = { v.rotulo: VerticeInfo() for v in grafo.get_vertices() }
-    fila = SimpleQueue()
+    fila = Queue()
     
     infos[fonte.rotulo].visitado = True
     fila.put(fonte)
@@ -24,7 +24,7 @@ def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residua
                 infos[v.rotulo].visitado = True
                 infos[v.rotulo].antecessor = u
                 if v == sorvedouro:
-                    caminho = SimpleQueue()
+                    caminho = Queue()
                     caminho.put(sorvedouro)
                     w = sorvedouro
                     while w != fonte:
@@ -34,3 +34,12 @@ def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residua
                 fila.put(v)
     return None
     
+    
+if __name__ == '__main__':
+    import os
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, './tests/wiki.net')
+    
+    g = Grafo.ler(filename)
+    result = edmonds_karp(g, g.get_vertices()[0], g.get_vertices()[-1])
+    print([v.rotulo for v in result.queue])

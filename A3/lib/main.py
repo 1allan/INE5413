@@ -104,6 +104,13 @@ class Grafo:
     def get_arestas(self) -> List[Aresta]:
         return list(self.arestas.values())
         
+    def get_particoes(self) -> Tuple[List[Vertice], List[Vertice]]:
+        particoes = ([], [])
+        for aresta in self.get_arestas():
+            particoes[0].append(aresta.u)
+            particoes[1].append(aresta.v)
+        return particoes
+        
     def ler(arquivo: str) -> Grafo:
         with open(arquivo, 'r', encoding='utf8') as file:
             vertices = []

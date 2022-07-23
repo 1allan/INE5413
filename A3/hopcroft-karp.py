@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple
-from queue import SimpleQueue
-from .lib import Grafo, Vertice
+from queue import Queue
+from lib import Grafo, Vertice
 
 
 class VerticeInfo:
@@ -10,11 +10,13 @@ class VerticeInfo:
         self.parceiro: Vertice | None = parceiro
         self.ref: Vertice | None  = ref
 
+# Este método é apenas para facilitar a usabilidade do `infos[None]`
+def get_rotulo_ou_none(v: Vertice) -> str | None:
+    return None if v is None else v.rotulo
 
-# TODO: acho que isso aqui deveria retornar outra coisa
 def bfs(grafo: Grafo, infos: Dict[str, VerticeInfo]) -> bool:
-    fila: SimpleQueue[Vertice] = SimpleQueue()
-    particao1: List[Vertice] = grafo.get_particoes()[0]
+    fila: Queue[Vertice] = Queue()
+    particao1 = grafo.get_particoes()[0]
 
     for x in particao1:
         if infos[x.rotulo].parceiro is None:
@@ -26,11 +28,11 @@ def bfs(grafo: Grafo, infos: Dict[str, VerticeInfo]) -> bool:
     infos[None] = VerticeInfo()
     while not fila.empty():
         x = fila.get()
-        info_x = infos[x.rotulo]
+        info_x = infos[get_rotulo_ou_none(x)]
         if info_x.d < infos[None].d:
             for y in grafo.vizinhos(x):
                 info_y = infos[y.rotulo]
-                info_parceiro_y = infos[info_y.parceiro.rotulo]
+                info_parceiro_y = infos[get_rotulo_ou_none(info_y.parceiro)]
                 if info_parceiro_y.d == float('inf'):
                     info_parceiro_y.d = info_x.d + 1
                     fila.put(info_y.parceiro)
@@ -43,7 +45,7 @@ def dfs(grafo: Grafo, x: Vertice, infos: Dict[str, VerticeInfo]) -> bool:
 
     for y in grafo.vizinhos(x):
         parceiro_y = infos[y.rotulo].parceiro
-        if infos[parceiro_y.rotulo].d == infos[x.rotulo].d + 1:
+        if infos[get_rotulo_ou_none(parceiro_y)].d == infos[x.rotulo].d + 1:
             if dfs(grafo, parceiro_y, infos):
                 infos[y.rotulo].parceiro = x
                 infos[x.rotulo].parceiro = y
@@ -54,7 +56,7 @@ def dfs(grafo: Grafo, x: Vertice, infos: Dict[str, VerticeInfo]) -> bool:
 
 
 def hopcroft_karp(grafo: Grafo) -> Tuple[int, List[Vertice]]:
-    (particao1, particao2): Tuple[List[Vertice], List[Vertice]] = grafo.get_particoes()
+    particao1, _ = grafo.get_particoes()
     infos = { v.rotulo: VerticeInfo() for v in grafo.get_vertices() }
     m = 0
 
@@ -63,6 +65,18 @@ def hopcroft_karp(grafo: Grafo) -> Tuple[int, List[Vertice]]:
             if infos[x.rotulo].parceiro is None:
                 if dfs(grafo, x, infos):
                     m += 1
-
-    parceiros = list([v.parceiro for v in infos.values()])
+    
+    parceiros = list([get_rotulo_ou_none(v.parceiro) for v in infos.values()])
     return (m, parceiros)
+
+
+if __name__ == '__main__':
+    import os
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, './tests/pequeno.net')
+    
+    g = Grafo.ler(filename)
+    tamanho, parceiros = hopcroft_karp(g)
+    print('Emparelhamento máximo:', tamanho)
+    print(parceiros)
+    

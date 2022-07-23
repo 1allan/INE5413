@@ -1,4 +1,5 @@
 from queue import Queue
+from typing import Tuple
 from lib import Grafo, Vertice
 
 
@@ -9,8 +10,7 @@ class VerticeInfo:
         self.antecessor: Vertice | None = antecessor
         self.ref: Vertice | None  = ref
 
-
-def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residual: Grafo) -> Queue | None:
+def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice) -> Tuple[Queue | None, float]:
     infos = { v.rotulo: VerticeInfo() for v in grafo.get_vertices() }
     fila = Queue()
     
@@ -27,12 +27,16 @@ def edmonds_karp(grafo: Grafo, fonte: Vertice, sorvedouro: Vertice, rede_residua
                     caminho = Queue()
                     caminho.put(sorvedouro)
                     w = sorvedouro
+                    fluxo_maximo = g.get_aresta(infos[w.rotulo].antecessor, w).peso
                     while w != fonte:
                         w = infos[w.rotulo].antecessor
                         caminho.put(w)
-                    return caminho
+                        aresta = None if w == fonte else g.get_aresta(infos[w.rotulo].antecessor, w)
+                        if aresta and fluxo_maximo > aresta.peso:
+                            fluxo_maximo = aresta.peso
+                    return (caminho, fluxo_maximo)
                 fila.put(v)
-    return None
+    return (None, -1.0)
     
     
 if __name__ == '__main__':
@@ -41,5 +45,5 @@ if __name__ == '__main__':
     filename = os.path.join(dirname, './tests/wiki.net')
     
     g = Grafo.ler(filename)
-    result = edmonds_karp(g, g.get_vertices()[0], g.get_vertices()[-1])
-    print([v.rotulo for v in result.queue])
+    caminho, fluxo_maximo = edmonds_karp(g, g.get_vertices()[0], g.get_vertices()[-1])
+    print(fluxo_maximo)

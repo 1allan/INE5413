@@ -46,4 +46,4 @@ if __name__ == '__main__':
     
     g = Grafo.ler(filename)
     caminho, fluxo_maximo = edmonds_karp(g, g.get_vertices()[0], g.get_vertices()[-1])
-    print(fluxo_maximo)
+    print('Fluxo máximo:', fluxo_maximo)

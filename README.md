@@ -1,4 +1,4 @@
-# INE5413 - Grafos
+# UFSC INE5413 - Grafos
 
 ## Implementações
 |    | Algoritmos                               |  Funcionam?  |
